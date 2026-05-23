@@ -14,7 +14,7 @@ Then visit `http://localhost:5173`.
 
 ## Customize
 
-- Replace `assets/user.jpg` with your portrait.
+- Replace `assets/profile.jpeg` with your portrait.
 - Replace `assets/city.jpg` with your own banner image.
 - Edit profile text, contact links, projects, and stack labels in `index.html`.
 - Tweak the theme colors and spacing in `styles.css`.

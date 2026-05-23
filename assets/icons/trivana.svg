@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Trivana Capital">
+  <rect width="64" height="64" rx="14" fill="#f7f7f2"/>
+  <path fill="#ff7a1a" d="M11 13h42L42 25H22L11 13Z"/>
+  <path fill="#0aa35f" d="M22 25h20L32 51 22 25Z"/>
+  <path fill="#2687ff" d="M22 25h20l-10 9-10-9Z"/>
+</svg>
