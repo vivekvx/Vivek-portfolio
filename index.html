@@ -116,11 +116,20 @@
 
         <section class="github-sync full-row" id="github-sync">
           <div class="rail coding-section">
-            <h2>Coding Activity</h2>
+            <h2>GitHub Activity</h2>
             <div class="github-chart-card">
               <div class="github-chart-top">
-                <h3 id="github-caption">1,326 contributions in the last year</h3>
-                <button class="settings-button" type="button">Contribution settings <span aria-hidden="true">⌄</span></button>
+                <div>
+                  <h3 id="github-caption">Live public GitHub snapshot</h3>
+                  <p class="github-section-note">Server-backed profile stats and repositories. The contribution calendar only appears when this deployment has a GitHub token configured.</p>
+                </div>
+                <a class="settings-button" id="github-profile-link" href="https://github.com/vivekvx" target="_blank" rel="noreferrer">Open @vivekvx <span aria-hidden="true">↗</span></a>
+              </div>
+
+              <div class="github-stat-row" aria-label="GitHub profile snapshot">
+                <article class="github-stat"><span>Public repos</span><strong id="github-public-repo-count">--</strong></article>
+                <article class="github-stat"><span>Followers</span><strong id="github-follower-count">--</strong></article>
+                <article class="github-stat"><span>Latest push</span><strong id="github-last-push">--</strong></article>
               </div>
 
               <div class="github-chart-layout">
@@ -128,7 +137,7 @@
                   <div class="calendar-wrap">
                     <div class="weekday-labels" aria-hidden="true"><span>Mon</span><span>Wed</span><span>Fri</span></div>
                     <div class="calendar-area">
-                      <div class="month-labels" aria-hidden="true"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span></div>
+                      <div class="month-labels" aria-hidden="true"></div>
                       <div class="github-graph-strip" id="github-graph-strip">
                         <div class="activity-grid" id="activity-grid" aria-label="GitHub contribution activity graph"></div>
                       </div>
@@ -136,26 +145,26 @@
                   </div>
 
                   <div class="contribution-footer">
-                    <span>Learn how we count contributions</span>
+                    <span id="github-calendar-note">Contribution calendar unavailable in this deployment. Open GitHub for the full yearly graph.</span>
                     <div class="contribution-legend" aria-label="Contribution intensity legend">
                       <span>Less</span><i data-level="0"></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i><span>More</span>
                     </div>
                   </div>
                 </div>
 
-                <div class="year-tabs" aria-label="Contribution years">
-                  <button class="active" type="button">2026</button>
-                  <button type="button">2025</button>
-                  <button type="button">2024</button>
+                <div class="github-side-panel" aria-label="Recent GitHub repositories">
+                  <h4>Recent public repositories</h4>
+                  <div class="github-repo-list" id="github-repo-list">
+                    <p class="github-repo-empty">Loading public repositories...</p>
+                  </div>
                 </div>
               </div>
 
               <div class="activity-meta-row">
                 <span class="github-mini-mark"><img src="assets/icons/github.svg" alt="" aria-hidden="true" /></span>
-                <p><strong id="github-pr-count">33</strong> OSS PRs across <em id="github-repo-count">--</em> repos</p>
-                <span class="oss-chip"><b>🤖</b><em id="github-language">AI</em></span>
-                <span class="oss-chip"><b>◌</b><em id="github-updated">live</em></span>
-                <span id="github-sync-status">Syncing public GitHub signal...</span>
+                <p><strong id="github-top-language">--</strong> appears most often across Vivek's recent public repositories.</p>
+                <span class="oss-chip"><b>⌘</b><em id="github-updated">Awaiting sync</em></span>
+                <span id="github-sync-status">Fetching live GitHub snapshot...</span>
               </div>
             </div>
           </div>

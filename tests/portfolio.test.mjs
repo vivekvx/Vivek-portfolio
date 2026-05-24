@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 const html = readFileSync("index.html", "utf8");
 const script = readFileSync("script.js", "utf8");
-const apiPath = "api/github-contributions.js";
+const apiPath = "api/github-activity.js";
 const api = existsSync(apiPath) ? readFileSync(apiPath, "utf8") : "";
 const aboutMatch = html.match(/<section class="about full-row" id="about">[\s\S]*?<\/section>/);
 const aboutHtml = aboutMatch?.[0] || "";
@@ -16,6 +16,11 @@ const expectations = [
   ["copyable contact buttons", "data-copy"],
   ["speech intro button", 'id="voice-button"'],
   ["activity grid", 'id="activity-grid"'],
+  ["repo list", 'id="github-repo-list"'],
+  ["profile link", 'id="github-profile-link"'],
+  ["public repo count", 'id="github-public-repo-count"'],
+  ["follower count", 'id="github-follower-count"'],
+  ["latest push date", 'id="github-last-push"'],
   ["AI stack chips", "stack-pills"],
   ["toast feedback", 'id="toast"'],
   ["Vivek Sahu name", "Vivek Sahu"],
@@ -27,18 +32,17 @@ const expectations = [
   ["Trivana work", "Trivana Capital"],
   ["GDGSSIPMT work", "GDGSSIPMT"],
   ["GitHub sync section", 'id="github-sync"'],
-  ["GitHub sync function", "syncGitHub"],
-  ["GitHub contribution API file", apiPath],
-  ["client contribution API fetch", "/api/github-contributions"],
-  ["GitHub GraphQL contribution calendar", "contributionCalendar"],
-  ["GitHub token server only", "process.env.GITHUB_TOKEN"],
-  ["public repo API", "https://api.github.com/users/vivekvx/repos?per_page=100&sort=updated"],
-  ["public events API", "https://api.github.com/users/vivekvx/events/public?per_page=100"],
+  ["GitHub activity sync function", "syncGitHubActivity"],
+  ["GitHub activity API file", apiPath],
+  ["client GitHub activity fetch", "/api/github-activity"],
+  ["server GitHub profile endpoint", "https://api.github.com/users/vivekvx"],
+  ["server GitHub repo endpoint", "https://api.github.com/users/vivekvx/repos?per_page=100&type=owner&sort=pushed"],
+  ["server GitHub GraphQL contribution calendar", "contributionCalendar"],
+  ["server GitHub token support", "process.env.GITHUB_TOKEN"],
   ["generated GitHub graph", "graph-generated"],
-  ["GitHub contribution settings", "Contribution settings"],
-  ["GitHub year tabs", "year-tabs"],
-  ["OSS PR row", "OSS PRs"],
-  ["contribution caption", "1,326 contributions in the last year"],
+  ["recent repositories label", "Recent public repositories"],
+  ["contribution fallback copy", "Contribution calendar unavailable in this deployment"],
+  ["open profile copy", "Open @vivekvx"],
   ["AI stack section", "LLM Engineering"],
   ["AI agents stack", "AI Agents"],
   ["hackathons section", 'id="achievements"'],
@@ -50,13 +54,12 @@ const expectations = [
   ["no profile details section", 'class="identity full-row"'],
   ["no phone row", 'id="phone-row"'],
   ["no Instagram link", "https://www.instagram.com/"],
-  ["no GitHub token", "GITHUB_TOKEN"],
+  ["no hardcoded GitHub token", "GITHUB_TOKEN_PLACEHOLDER"],
   ["no About featured project list", "featured-list"],
   ["no Friday in About", "Friday.ai"],
   ["no FlowRestore in About", "FlowRestore"],
   ["copy handler", "navigator.clipboard.writeText"],
   ["project accordion handler", "aria-expanded"],
-  ["activity grid builder", "buildActivityGrid"],
   ["SVG icon assets", "assets/icons/github.svg"],
   ["section reveal motion", "enhanceSectionMotion"],
 ];
@@ -70,15 +73,20 @@ for (const [label, snippet] of expectations) {
     assert(!html.includes(snippet), `${snippet} should not be included`);
     continue;
   }
-  if (label === "no GitHub token") {
-    assert(!html.includes(snippet) && !script.includes(snippet), "GitHub token should not be required");
+  if (label === "no hardcoded GitHub token") {
+    assert(!html.includes(snippet) && !script.includes(snippet) && !api.includes(snippet), "GitHub secrets should not be hardcoded");
     continue;
   }
-  if (label === "GitHub contribution API file") {
+  if (label === "GitHub activity API file") {
     assert(existsSync(snippet), `${snippet} should exist`);
     continue;
   }
-  if (label === "GitHub GraphQL contribution calendar" || label === "GitHub token server only") {
+  if (
+    label === "server GitHub profile endpoint" ||
+    label === "server GitHub repo endpoint" ||
+    label === "server GitHub GraphQL contribution calendar" ||
+    label === "server GitHub token support"
+  ) {
     assert(api.includes(snippet), `Missing ${label}: expected ${snippet}`);
     continue;
   }
@@ -98,6 +106,25 @@ for (const [label, snippet] of expectations) {
   assert(
     html.includes(snippet) || script.includes(snippet),
     `Missing ${label}: expected ${snippet}`,
+  );
+}
+
+const forbiddenSnippets = [
+  "1,326 contributions in the last year",
+  "GitHub contribution sync unavailable. Showing fallback activity.",
+  "Contribution settings",
+  "OSS PRs",
+  "displayedCommits = 1326",
+  "fillFallbackHeatmap",
+  "contributionLevel(index)",
+  "https://api.github.com/users/vivekvx/repos?per_page=100&sort=updated",
+  "https://api.github.com/users/vivekvx/events/public?per_page=100",
+];
+
+for (const snippet of forbiddenSnippets) {
+  assert(
+    !html.includes(snippet) && !script.includes(snippet),
+    `Unexpected fake or fragile GitHub behavior still present: ${snippet}`,
   );
 }
 

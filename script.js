@@ -88,7 +88,8 @@ document.querySelectorAll(".project-head").forEach((button) => {
 });
 
 const graphStrip = document.getElementById("github-graph-strip");
-let contributionCalendarSynced = false;
+const DEFAULT_MONTHS = ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"];
+const CONTRIBUTION_GRID_CELLS = 53 * 7;
 
 if (graphStrip) {
   graphStrip.classList.add("graph-generated");
@@ -126,10 +127,9 @@ function updateClock() {
   }).format(new Date());
 }
 
-function contributionLevel(index) {
-  const wave = Math.sin(index * 0.21) + Math.cos(index * 0.087);
-  const burst = index % 31 < 5 || index % 47 > 40 ? 1 : 0;
-  return Math.max(0, Math.min(4, Math.floor(wave + 2 + burst)));
+function formatShortDate(value, options = { month: "short", day: "numeric", year: "numeric" }) {
+  if (!value) return "--";
+  return new Date(value).toLocaleDateString("en-IN", options);
 }
 
 function levelFromGitHub(level) {
@@ -157,7 +157,7 @@ function renderMonthLabels(months) {
   labels.textContent = "";
 
   if (!months?.length) {
-    ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"].forEach((month) => {
+    DEFAULT_MONTHS.forEach((month) => {
       const label = document.createElement("span");
       label.textContent = month;
       labels.append(label);
@@ -175,29 +175,46 @@ function renderMonthLabels(months) {
   });
 }
 
-function fillFallbackHeatmap(grid, cells) {
+function setTextContent(id, value) {
+  const node = document.getElementById(id);
+  if (node) {
+    node.textContent = value;
+  }
+}
+
+function renderContributionUnavailable(message) {
+  const grid = document.getElementById("activity-grid");
+  const caption = document.getElementById("github-caption");
+  const note = document.getElementById("github-calendar-note");
+
   if (!grid) return;
+
   grid.textContent = "";
   const fragments = document.createDocumentFragment();
-  const today = new Date();
 
-  for (let index = 0; index < cells; index += 1) {
-    const level = contributionLevel(index);
+  for (let index = 0; index < CONTRIBUTION_GRID_CELLS; index += 1) {
     const cell = document.createElement("span");
-    const date = new Date(today);
-    date.setDate(today.getDate() - (cells - index - 1));
-    cell.dataset.level = String(level);
-    cell.title = `${level} contribution${level === 1 ? "" : "s"} on ${date.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}`;
+    cell.dataset.level = "0";
+    cell.title = message;
     fragments.append(cell);
   }
 
   grid.append(fragments);
+  renderMonthLabels();
+
+  if (caption) {
+    caption.textContent = "Live public GitHub snapshot";
+  }
+
+  if (note) {
+    note.textContent = message;
+  }
 }
 
 function renderContributionCalendar(calendar) {
   const grid = document.getElementById("activity-grid");
   const caption = document.getElementById("github-caption");
-  const status = document.getElementById("github-sync-status");
+  const note = document.getElementById("github-calendar-note");
 
   if (!grid || !calendar?.weeks?.length) {
     throw new Error("Missing contribution calendar data");
@@ -226,87 +243,111 @@ function renderContributionCalendar(calendar) {
     caption.textContent = `${calendar.totalContributions.toLocaleString("en-IN")} contributions in the last year`;
   }
 
+  if (note) {
+    note.textContent = "Contribution calendar synced from GitHub's last 12 months of public activity.";
+  }
+}
+
+function renderRepositoryList(repositories) {
+  const list = document.getElementById("github-repo-list");
+  if (!list) return;
+
+  list.textContent = "";
+
+  if (!repositories?.length) {
+    const empty = document.createElement("p");
+    empty.className = "github-repo-empty";
+    empty.textContent = "Repository details are unavailable right now. Open GitHub to browse the latest work.";
+    list.append(empty);
+    return;
+  }
+
+  repositories.forEach((repo) => {
+    const item = document.createElement("a");
+    item.className = "github-repo-item";
+    item.href = repo.url;
+    item.target = "_blank";
+    item.rel = "noreferrer";
+
+    const title = document.createElement("strong");
+    title.textContent = repo.name;
+
+    const description = document.createElement("p");
+    description.textContent = repo.description || "No public description provided.";
+
+    const meta = document.createElement("small");
+    const parts = [];
+    if (repo.language) parts.push(repo.language);
+    if (typeof repo.stars === "number") parts.push(`${repo.stars} star${repo.stars === 1 ? "" : "s"}`);
+    if (repo.pushedAt) parts.push(`Updated ${formatShortDate(repo.pushedAt, { month: "short", day: "numeric", year: "numeric" })}`);
+    meta.textContent = parts.join(" · ");
+
+    item.append(title, description, meta);
+    list.append(item);
+  });
+}
+
+function renderGitHubActivity(snapshot) {
+  const profileLink = document.getElementById("github-profile-link");
+  const status = document.getElementById("github-sync-status");
+
+  setTextContent("github-public-repo-count", String(snapshot.profile.publicRepos ?? "--"));
+  setTextContent("github-follower-count", String(snapshot.profile.followers ?? "--"));
+  setTextContent("github-last-push", snapshot.summary.lastPush ? formatShortDate(snapshot.summary.lastPush, { month: "short", day: "numeric", year: "numeric" }) : "--");
+  setTextContent("github-top-language", snapshot.summary.topLanguage || "No dominant language yet");
+  setTextContent("github-updated", snapshot.generatedAt ? `Synced ${formatShortDate(snapshot.generatedAt, { month: "short", day: "numeric" })}` : "Awaiting sync");
+
+  if (profileLink && snapshot.profile.url) {
+    profileLink.href = snapshot.profile.url;
+  }
+
+  renderRepositoryList(snapshot.repositories);
+
+  if (snapshot.contributionCalendar?.available) {
+    renderContributionCalendar(snapshot.contributionCalendar);
+  } else {
+    renderContributionUnavailable("Contribution calendar unavailable in this deployment. Open GitHub for the full yearly graph.");
+  }
+
   if (status) {
-    status.textContent = "Synced from GitHub contributions.";
+    status.textContent = snapshot.contributionCalendar?.available
+      ? "Live snapshot synced from GitHub."
+      : "Profile data is live. Contribution calendar needs a server-side GitHub token.";
   }
-
-  contributionCalendarSynced = true;
 }
 
-function buildActivityGrid() {
-  renderMonthLabels();
-  fillFallbackHeatmap(document.getElementById("activity-grid"), 53 * 7);
-}
-
-async function syncContributionCalendar() {
+async function syncGitHubActivity() {
   const status = document.getElementById("github-sync-status");
 
   try {
-    const response = await fetch("/api/github-contributions");
-    if (!response.ok) throw new Error("GitHub contribution API unavailable");
+    const response = await fetch("/api/github-activity", {
+      headers: {
+        Accept: "application/json",
+      },
+    });
 
-    const calendar = await response.json();
-    renderContributionCalendar(calendar);
+    if (!response.ok) {
+      throw new Error("GitHub activity API unavailable");
+    }
+
+    const snapshot = await response.json();
+    renderGitHubActivity(snapshot);
   } catch {
-    contributionCalendarSynced = false;
+    renderContributionUnavailable("Contribution calendar unavailable in this deployment. Open GitHub for the full yearly graph.");
+    renderRepositoryList([]);
+    setTextContent("github-public-repo-count", "--");
+    setTextContent("github-follower-count", "--");
+    setTextContent("github-last-push", "--");
+    setTextContent("github-top-language", "GitHub sync unavailable");
+    setTextContent("github-updated", "Unavailable");
     if (status) {
-      status.textContent = "GitHub contribution sync unavailable. Showing fallback activity.";
+      status.textContent = "Live GitHub snapshot unavailable right now. Open the profile link for the latest activity.";
     }
-  }
-}
-
-async function syncGitHub() {
-  const status = document.getElementById("github-sync-status");
-  const repoCount = document.getElementById("github-repo-count");
-  const language = document.getElementById("github-language");
-  const updated = document.getElementById("github-updated");
-  const commitCount = document.getElementById("github-commit-count");
-  const caption = document.getElementById("github-caption");
-
-  try {
-    const [reposResponse, eventsResponse] = await Promise.all([
-      fetch("https://api.github.com/users/vivekvx/repos?per_page=100&sort=updated"),
-      fetch("https://api.github.com/users/vivekvx/events/public?per_page=100"),
-    ]);
-
-    if (!reposResponse.ok) throw new Error("GitHub repo sync failed");
-
-    const repos = await reposResponse.json();
-    const events = eventsResponse.ok ? await eventsResponse.json() : [];
-    const languages = repos.reduce((counts, repo) => {
-      if (repo.language) counts[repo.language] = (counts[repo.language] || 0) + 1;
-      return counts;
-    }, {});
-    const topLanguage = Object.entries(languages).sort((a, b) => b[1] - a[1])[0]?.[0] || "AI";
-    const latestRepo = repos[0];
-    const pushEvents = events.filter((event) => event.type === "PushEvent");
-    const commitTotal = pushEvents.reduce((total, event) => total + (event.payload?.commits?.length || 0), 0);
-    const displayedCommits = 1326;
-
-    repoCount.textContent = String(repos.length);
-    language.textContent = topLanguage;
-    updated.textContent = latestRepo ? new Date(latestRepo.pushed_at).toLocaleDateString("en-IN", { month: "short", day: "numeric" }) : "--";
-    if (commitCount) commitCount.textContent = displayedCommits.toLocaleString("en-IN");
-    document.getElementById("github-pr-count").textContent = String(Math.max(33, commitTotal + repos.length));
-    if (!contributionCalendarSynced) {
-      status.textContent = "GitHub contribution sync unavailable. Showing fallback activity.";
-      caption.textContent = `${displayedCommits.toLocaleString("en-IN")} contributions in the last year`;
-    }
-  } catch {
-    if (!contributionCalendarSynced) {
-      status.textContent = "GitHub contribution sync unavailable. Showing fallback activity.";
-    }
-    repoCount.textContent = "2+";
-    language.textContent = "Python";
-    updated.textContent = "Live";
-    if (commitCount) commitCount.textContent = "1,326";
-    caption.textContent = "1,326 contributions in the last year";
   }
 }
 
 updateClock();
 setInterval(updateClock, 30000);
-buildActivityGrid();
-syncContributionCalendar();
-syncGitHub();
+renderContributionUnavailable("Contribution calendar unavailable in this deployment. Open GitHub for the full yearly graph.");
+syncGitHubActivity();
 enhanceSectionMotion();
