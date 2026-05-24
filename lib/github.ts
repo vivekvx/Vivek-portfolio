@@ -1,7 +1,8 @@
 const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
 const GITHUB_LOGIN = "vivekvx";
 const GITHUB_PROFILE_ENDPOINT = "https://api.github.com/users/vivekvx";
-const GITHUB_REPOS_ENDPOINT = "https://api.github.com/users/vivekvx/repos?per_page=100&type=owner&sort=pushed";
+const GITHUB_REPOS_ENDPOINT =
+  "https://api.github.com/users/vivekvx/repos?per_page=100&type=owner&sort=pushed";
 
 const contributionQuery = `
   query ContributionCalendar($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -30,15 +31,44 @@ const contributionQuery = `
   }
 `;
 
-function json(res, statusCode, payload) {
-  res.statusCode = statusCode;
-  res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.setHeader("Cache-Control", "s-maxage=900, stale-while-revalidate=3600");
-  res.end(JSON.stringify(payload));
-}
+export type GitHubRepository = {
+  fork: boolean;
+  language: string | null;
+  pushed_at: string | null;
+  name: string;
+  html_url: string;
+  description: string | null;
+  stargazers_count: number;
+};
 
-function buildHeaders(token) {
-  const headers = {
+export type GitHubContributionCalendar =
+  | {
+      available: true;
+      totalContributions: number;
+      weeks: Array<{
+        contributionDays: Array<{
+          date: string;
+          contributionCount: number;
+          contributionLevel: string;
+          color: string;
+          weekday: number;
+        }>;
+      }>;
+      months: Array<{
+        name: string;
+        firstDay: string;
+        totalWeeks: number;
+        year: number;
+      }>;
+    }
+  | {
+      available: false;
+      reason: string;
+      message?: string;
+    };
+
+export function buildHeaders(token?: string) {
+  const headers: HeadersInit = {
     Accept: "application/vnd.github+json",
     "User-Agent": "vivekvx-portfolio",
   };
@@ -50,17 +80,18 @@ function buildHeaders(token) {
   return headers;
 }
 
-function summarizeRepositories(repositories) {
+export function summarizeRepositories(repositories: GitHubRepository[]) {
   const ownedRepositories = repositories.filter((repo) => !repo.fork);
   const latestPush = ownedRepositories[0]?.pushed_at || repositories[0]?.pushed_at || null;
-  const languageCounts = ownedRepositories.reduce((counts, repo) => {
+  const languageCounts = ownedRepositories.reduce<Record<string, number>>((counts, repo) => {
     if (repo.language) {
       counts[repo.language] = (counts[repo.language] || 0) + 1;
     }
     return counts;
   }, {});
 
-  const topLanguage = Object.entries(languageCounts).sort((left, right) => right[1] - left[1])[0]?.[0] || null;
+  const topLanguage =
+    Object.entries(languageCounts).sort((left, right) => right[1] - left[1])[0]?.[0] || null;
 
   return {
     latestPush,
@@ -76,7 +107,7 @@ function summarizeRepositories(repositories) {
   };
 }
 
-async function fetchContributionCalendar(token) {
+export async function fetchContributionCalendar(token?: string): Promise<GitHubContributionCalendar> {
   if (!token) {
     return {
       available: false,
@@ -102,6 +133,7 @@ async function fetchContributionCalendar(token) {
         to: to.toISOString(),
       },
     }),
+    cache: "no-store",
   });
 
   if (!response.ok) {
@@ -123,53 +155,46 @@ async function fetchContributionCalendar(token) {
   };
 }
 
-module.exports = async function handler(req, res) {
-  if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
-    return json(res, 405, { error: "method_not_allowed" });
-  }
-
+export async function fetchGitHubSnapshot() {
   const token = process.env.GITHUB_TOKEN;
   const headers = buildHeaders(token);
 
-  try {
-    const [profileResponse, reposResponse, contributionCalendar] = await Promise.all([
-      fetch(GITHUB_PROFILE_ENDPOINT, { headers }),
-      fetch(GITHUB_REPOS_ENDPOINT, { headers }),
-      fetchContributionCalendar(token).catch((error) => ({
-        available: false,
-        reason: "github_unavailable",
-        message: error.message,
-      })),
-    ]);
+  const [profileResponse, reposResponse, contributionCalendar] = await Promise.all([
+    fetch(GITHUB_PROFILE_ENDPOINT, {
+      headers,
+      next: { revalidate: 900 },
+    }),
+    fetch(GITHUB_REPOS_ENDPOINT, {
+      headers,
+      next: { revalidate: 900 },
+    }),
+    fetchContributionCalendar(token).catch((error) => ({
+      available: false,
+      reason: "github_unavailable",
+      message: error instanceof Error ? error.message : "Unknown GitHub error",
+    })),
+  ]);
 
-    if (!profileResponse.ok || !reposResponse.ok) {
-      throw new Error("GitHub public profile sync failed");
-    }
-
-    const [profile, repositories] = await Promise.all([
-      profileResponse.json(),
-      reposResponse.json(),
-    ]);
-
-    const summary = summarizeRepositories(repositories);
-
-    return json(res, 200, {
-      profile: {
-        login: profile.login || GITHUB_LOGIN,
-        url: profile.html_url || `https://github.com/${GITHUB_LOGIN}`,
-        publicRepos: profile.public_repos ?? summary.recentRepositories.length,
-        followers: profile.followers ?? 0,
-      },
-      summary: {
-        topLanguage: summary.topLanguage,
-        lastPush: summary.latestPush,
-      },
-      repositories: summary.recentRepositories,
-      contributionCalendar,
-      generatedAt: new Date().toISOString(),
-    });
-  } catch {
-    return json(res, 503, { error: "github_unavailable" });
+  if (!profileResponse.ok || !reposResponse.ok) {
+    throw new Error("GitHub public profile sync failed");
   }
-};
+
+  const [profile, repositories] = await Promise.all([profileResponse.json(), reposResponse.json()]);
+  const summary = summarizeRepositories(repositories);
+
+  return {
+    profile: {
+      login: profile.login || GITHUB_LOGIN,
+      url: profile.html_url || `https://github.com/${GITHUB_LOGIN}`,
+      publicRepos: profile.public_repos ?? summary.recentRepositories.length,
+      followers: profile.followers ?? 0,
+    },
+    summary: {
+      topLanguage: summary.topLanguage,
+      lastPush: summary.latestPush,
+    },
+    repositories: summary.recentRepositories,
+    contributionCalendar,
+    generatedAt: new Date().toISOString(),
+  };
+}

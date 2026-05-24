@@ -1,0 +1,29 @@
+import { SectionHeading } from "@/components/ui/section-heading";
+import type { PortfolioContent } from "@/content/portfolio";
+
+export function AchievementsSection({ achievements }: { achievements: PortfolioContent["achievements"] }) {
+  return (
+    <section className="achievements full-row" id="achievements">
+      <div className="rail content-section">
+        <SectionHeading title="Hackathons & Achievements" kicker="Proof of work" />
+        <div className="achievement-list">
+          {achievements.map((item) => (
+            <article key={item.title}>
+              <span className="achievement-no">{item.number}</span>
+              <span className={`achievement-logo ${item.iconTone}`}>
+                <img src={item.icon} alt="" aria-hidden="true" />
+              </span>
+              <div>
+                <h3>
+                  {item.title} <em className={`badge ${item.badgeTone}`}>{item.badge}</em>
+                </h3>
+                <p>{item.org}</p>
+              </div>
+              <strong>{item.year}</strong>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

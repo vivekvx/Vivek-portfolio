@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Friday AI">
+  <rect width="64" height="64" rx="16" fill="#101010"/>
+  <path fill="#39d353" d="M16 16h32v9H27v7h17v8H27v12H16V16Z"/>
+  <circle cx="46" cy="46" r="5" fill="#009bf5"/>
+</svg>

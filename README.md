@@ -1,20 +1,25 @@
 # Vivek Portfolio
 
-A lightweight static portfolio inspired by `kantrishi.com`.
+Next.js App Router portfolio for Vivek Sahu with:
 
-## Run Locally
+- data-driven portfolio content
+- a live GitHub activity route
+- a premium single-page React UI
+- client-side theme, command palette, and project interactions
 
-Open `index.html` directly in a browser, or serve the folder:
+## Development
 
 ```bash
-python3 -m http.server 5173
+npm install
+npm run dev
 ```
 
-Then visit `http://localhost:5173`.
+## Build
 
-## Customize
+```bash
+npm run build
+```
 
-- Replace `assets/profile.jpeg` with your portrait.
-- Replace `assets/city.jpg` with your own banner image.
-- Edit profile text, contact links, projects, and stack labels in `index.html`.
-- Tweak the theme colors and spacing in `styles.css`.
+## Environment
+
+Set `GITHUB_TOKEN` if you want the GitHub contribution calendar to render. Public profile and repository data still work without it.

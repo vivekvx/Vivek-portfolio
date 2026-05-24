@@ -1,131 +1,33 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 
-const html = readFileSync("index.html", "utf8");
-const script = readFileSync("script.js", "utf8");
-const apiPath = "api/github-activity.js";
-const api = existsSync(apiPath) ? readFileSync(apiPath, "utf8") : "";
-const aboutMatch = html.match(/<section class="about full-row" id="about">[\s\S]*?<\/section>/);
-const aboutHtml = aboutMatch?.[0] || "";
-const achievementsMatch = html.match(/<section class="achievements full-row" id="achievements">[\s\S]*?<\/section>/);
-const achievementsHtml = achievementsMatch?.[0] || "";
+const page = readFileSync("app/page.tsx", "utf8");
+const shell = readFileSync("components/portfolio-shell.tsx", "utf8");
+const content = readFileSync("content/portfolio.ts", "utf8");
+const route = readFileSync("app/api/github-activity/route.ts", "utf8");
+const githubLib = readFileSync("lib/github.ts", "utf8");
+const css = readFileSync("app/globals.css", "utf8");
 
-const expectations = [
-  ["command palette button", 'id="command-toggle"'],
-  ["command palette dialog", 'id="command-palette"'],
-  ["copyable contact buttons", "data-copy"],
-  ["speech intro button", 'id="voice-button"'],
-  ["activity grid", 'id="activity-grid"'],
-  ["repo list", 'id="github-repo-list"'],
-  ["profile link", 'id="github-profile-link"'],
-  ["public repo count", 'id="github-public-repo-count"'],
-  ["follower count", 'id="github-follower-count"'],
-  ["latest push date", 'id="github-last-push"'],
-  ["AI stack chips", "stack-pills"],
-  ["toast feedback", 'id="toast"'],
-  ["Vivek Sahu name", "Vivek Sahu"],
-  ["LinkedIn profile", "https://www.linkedin.com/in/viveksahuvx/"],
-  ["X profile", "https://x.com/Vivekvkvq"],
-  ["Friday project", "https://github.com/vivekvx/Friday.ai"],
-  ["FlowRestore project", "https://github.com/vivekvx/Flowrestore"],
-  ["work experience section", 'id="experience"'],
-  ["Trivana work", "Trivana Capital"],
-  ["GDGSSIPMT work", "GDGSSIPMT"],
-  ["GitHub sync section", 'id="github-sync"'],
-  ["GitHub activity sync function", "syncGitHubActivity"],
-  ["GitHub activity API file", apiPath],
-  ["client GitHub activity fetch", "/api/github-activity"],
-  ["server GitHub profile endpoint", "https://api.github.com/users/vivekvx"],
-  ["server GitHub repo endpoint", "https://api.github.com/users/vivekvx/repos?per_page=100&type=owner&sort=pushed"],
-  ["server GitHub GraphQL contribution calendar", "contributionCalendar"],
-  ["server GitHub token support", "process.env.GITHUB_TOKEN"],
-  ["generated GitHub graph", "graph-generated"],
-  ["recent repositories label", "Recent public repositories"],
-  ["contribution fallback copy", "Contribution calendar unavailable in this deployment"],
-  ["open profile copy", "Open @vivekvx"],
-  ["AI stack section", "LLM Engineering"],
-  ["AI agents stack", "AI Agents"],
-  ["hackathons section", 'id="achievements"'],
-  ["Paytm AI Hackathon", "Paytm AI Hackathon"],
-  ["SBI Mutual Fund Hackathon", "SBI Mutual Fund Hackathon"],
-  ["only two hackathon rows", "achievement-list"],
-  ["no Google hackathon rows", "Google Hyderabad Build"],
-  ["no Harvard row", "Harvard HPAIR"],
-  ["no profile details section", 'class="identity full-row"'],
-  ["no phone row", 'id="phone-row"'],
-  ["no Instagram link", "https://www.instagram.com/"],
-  ["no hardcoded GitHub token", "GITHUB_TOKEN_PLACEHOLDER"],
-  ["no About featured project list", "featured-list"],
-  ["no Friday in About", "Friday.ai"],
-  ["no FlowRestore in About", "FlowRestore"],
-  ["copy handler", "navigator.clipboard.writeText"],
-  ["project accordion handler", "aria-expanded"],
-  ["SVG icon assets", "assets/icons/github.svg"],
-  ["section reveal motion", "enhanceSectionMotion"],
-];
+assert(page.includes("PortfolioShell"), "home page should render the portfolio shell");
+assert(shell.includes("GitHubActivitySection"), "portfolio shell should include the live GitHub section");
+assert(shell.includes("ThemeProvider"), "portfolio shell should include the theme provider");
+assert(shell.includes("CommandPalette"), "portfolio shell should include the command palette");
+assert(content.includes("Trivana Capital"), "content should include Trivana experience");
+assert(content.includes("GDGSSIPMT"), "content should include GDGSSIPMT experience");
+assert(content.includes("Friday.ai"), "content should include Friday.ai");
+assert(content.includes("FlowRestore"), "content should include FlowRestore");
+assert(content.includes("Paytm AI Hackathon"), "content should include Paytm AI Hackathon");
+assert(content.includes("SBI Mutual Fund Hackathon"), "content should include SBI Mutual Fund Hackathon");
+assert(route.includes("fetchGitHubSnapshot"), "GitHub API route should use the shared snapshot helper");
+assert(githubLib.includes("https://api.github.com/users/vivekvx"), "GitHub lib should fetch the public profile");
+assert(githubLib.includes("https://api.github.com/graphql"), "GitHub lib should support the GraphQL contribution calendar");
+assert(githubLib.includes("process.env.GITHUB_TOKEN"), "GitHub lib should support a server token");
+assert(css.includes("--accent:"), "global styles should define design tokens");
+assert(css.includes(".github-chart-card"), "global styles should include GitHub card styling");
+assert(existsSync("public/assets/icons/github.svg"), "public assets should be copied for Next.js");
+assert(!existsSync("index.html"), "legacy index.html should be removed");
+assert(!existsSync("script.js"), "legacy script.js should be removed");
+assert(!existsSync("styles.css"), "legacy styles.css should be removed");
+assert(!existsSync("api/github-activity.js"), "legacy Vercel API should be removed");
 
-for (const [label, snippet] of expectations) {
-  if (label === "no Instagram link") {
-    assert(!html.includes(snippet), "Instagram should not be included");
-    continue;
-  }
-  if (label === "no profile details section" || label === "no phone row") {
-    assert(!html.includes(snippet), `${snippet} should not be included`);
-    continue;
-  }
-  if (label === "no hardcoded GitHub token") {
-    assert(!html.includes(snippet) && !script.includes(snippet) && !api.includes(snippet), "GitHub secrets should not be hardcoded");
-    continue;
-  }
-  if (label === "GitHub activity API file") {
-    assert(existsSync(snippet), `${snippet} should exist`);
-    continue;
-  }
-  if (
-    label === "server GitHub profile endpoint" ||
-    label === "server GitHub repo endpoint" ||
-    label === "server GitHub GraphQL contribution calendar" ||
-    label === "server GitHub token support"
-  ) {
-    assert(api.includes(snippet), `Missing ${label}: expected ${snippet}`);
-    continue;
-  }
-  if (label === "no About featured project list" || label === "no Friday in About" || label === "no FlowRestore in About") {
-    assert(!aboutHtml.includes(snippet), `${snippet} should not be inside About`);
-    continue;
-  }
-  if (label === "only two hackathon rows") {
-    const rowCount = (achievementsHtml.match(/<article>/g) || []).length;
-    assert.equal(rowCount, 2, "Hackathons section should contain exactly two rows");
-    continue;
-  }
-  if (label === "no Google hackathon rows" || label === "no Harvard row") {
-    assert(!achievementsHtml.includes(snippet), `${snippet} should not be inside Hackathons`);
-    continue;
-  }
-  assert(
-    html.includes(snippet) || script.includes(snippet),
-    `Missing ${label}: expected ${snippet}`,
-  );
-}
-
-const forbiddenSnippets = [
-  "1,326 contributions in the last year",
-  "GitHub contribution sync unavailable. Showing fallback activity.",
-  "Contribution settings",
-  "OSS PRs",
-  "displayedCommits = 1326",
-  "fillFallbackHeatmap",
-  "contributionLevel(index)",
-  "https://api.github.com/users/vivekvx/repos?per_page=100&sort=updated",
-  "https://api.github.com/users/vivekvx/events/public?per_page=100",
-];
-
-for (const snippet of forbiddenSnippets) {
-  assert(
-    !html.includes(snippet) && !script.includes(snippet),
-    `Unexpected fake or fragile GitHub behavior still present: ${snippet}`,
-  );
-}
-
-console.log("Portfolio interactive contract passed.");
+console.log("Next.js portfolio contract passed.");

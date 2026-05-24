@@ -1,0 +1,840 @@
+:root {
+  --bg: #07111c;
+  --panel: rgba(9, 18, 31, 0.82);
+  --panel-soft: rgba(16, 30, 49, 0.75);
+  --panel-strong: rgba(12, 22, 38, 0.92);
+  --text: #f6f7fb;
+  --muted: rgba(246, 247, 251, 0.7);
+  --quiet: rgba(246, 247, 251, 0.46);
+  --border: rgba(190, 209, 255, 0.16);
+  --border-strong: rgba(190, 209, 255, 0.32);
+  --hover: rgba(134, 170, 255, 0.1);
+  --accent: #68b3ff;
+  --accent-strong: #2f7de1;
+  --green: #52da85;
+  --orange: #ff9b45;
+  --blue: #5b8dff;
+  --shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
+}
+
+html[data-theme="light"] {
+  --bg: #eef3fb;
+  --panel: rgba(255, 255, 255, 0.86);
+  --panel-soft: rgba(248, 251, 255, 0.92);
+  --panel-strong: rgba(255, 255, 255, 0.95);
+  --text: #142032;
+  --muted: rgba(20, 32, 50, 0.72);
+  --quiet: rgba(20, 32, 50, 0.5);
+  --border: rgba(65, 93, 139, 0.16);
+  --border-strong: rgba(65, 93, 139, 0.28);
+  --hover: rgba(59, 108, 192, 0.08);
+  --shadow: 0 22px 70px rgba(63, 98, 151, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at top, rgba(80, 125, 220, 0.24), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 20%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.site-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(780px 420px at 15% 0%, rgba(104, 179, 255, 0.12), transparent 70%),
+    radial-gradient(640px 400px at 100% 18%, rgba(82, 218, 133, 0.08), transparent 72%);
+}
+
+.full-row {
+  width: 100%;
+  padding-inline: 16px;
+}
+
+.rail {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  border-inline: 1px solid var(--border);
+}
+
+section[id] {
+  scroll-margin-top: 90px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+}
+
+.topbar .rail {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  min-height: 66px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.desktop-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.desktop-nav a,
+.pill-button,
+.icon-button,
+.voice-button,
+.settings-button {
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.desktop-nav a {
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--quiet);
+  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.desktop-nav a:hover,
+.pill-button:hover,
+.icon-button:hover,
+.voice-button:hover,
+.settings-button:hover,
+.social-grid a:hover,
+.project-head:hover,
+.stack-pills span:hover,
+.github-repo-item:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: var(--hover);
+  color: var(--text);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-button,
+.voice-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.icon-button img,
+.social-mark img,
+.company-logo img,
+.achievement-logo img,
+.timeline-icons img,
+.github-mini-mark img {
+  width: 16px;
+  height: 16px;
+}
+
+html[data-theme="dark"] .icon-button img,
+html:not([data-theme]) .icon-button img,
+html[data-theme="dark"] .github-mini-mark img,
+html:not([data-theme]) .github-mini-mark img {
+  filter: invert(1);
+}
+
+.pill-button,
+.settings-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+  color: var(--text);
+}
+
+.hero-frame,
+.content-section,
+.coding-section,
+.footer-rail {
+  position: relative;
+}
+
+.hero-frame {
+  min-height: 410px;
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-frame > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.12);
+  transform: scale(1.04);
+}
+
+.hero-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 14, 23, 0.12), rgba(8, 14, 23, 0.78)),
+    linear-gradient(90deg, rgba(9, 18, 31, 0.64), transparent 55%);
+}
+
+.hero-scan {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent 0 10px, rgba(255, 255, 255, 0.05) 11px);
+  mix-blend-mode: screen;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 660px;
+  padding: 48px 34px;
+}
+
+.hero-tag,
+.section-kicker,
+.eyebrow {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.hero-copy h1 {
+  margin: 0;
+  font-size: clamp(44px, 8vw, 92px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.hero-copy p:last-child {
+  max-width: 540px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: clamp(16px, 1.9vw, 20px);
+  line-height: 1.7;
+}
+
+.profile-grid,
+.content-section,
+.coding-section,
+.footer-rail {
+  padding: 30px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 28px;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+}
+
+.portrait {
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--panel-strong);
+  box-shadow: var(--shadow);
+}
+
+.portrait img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.name-row h2,
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.role-line,
+.github-section-note,
+.experience-meta,
+.terminal-list,
+.project-card p,
+.achievement-list p {
+  color: var(--muted);
+}
+
+.verified {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(82, 218, 133, 0.18);
+  color: var(--green);
+}
+
+.divider .pattern {
+  height: 1px;
+  background:
+    linear-gradient(90deg, transparent, rgba(104, 179, 255, 0.28), transparent),
+    var(--border);
+}
+
+.social-grid,
+.experience-list,
+.achievement-list,
+.project-timeline {
+  display: grid;
+  gap: 18px;
+}
+
+.social-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 22px 30px;
+}
+
+.social-grid a,
+.experience-item,
+.github-chart-card,
+.achievement-list article,
+.project-card {
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.social-grid a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+}
+
+.social-mark,
+.company-logo,
+.achievement-logo,
+.timeline-icons span,
+.github-mini-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.social-grid strong,
+.project-head strong,
+.achievement-list h3 {
+  display: block;
+}
+
+.social-grid em,
+.project-head em,
+.project-head small {
+  display: block;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.link-arrow {
+  margin-left: auto;
+  color: var(--quiet);
+}
+
+.content-section,
+.coding-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.section-heading {
+  margin-bottom: 22px;
+}
+
+.experience-item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 18px;
+  padding: 22px;
+}
+
+.tags,
+.stack-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tags span,
+.stack-pills span {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.terminal-list {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 12px;
+  line-height: 1.7;
+}
+
+.ai-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.stack-category {
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--panel);
+}
+
+.stack-category h3 {
+  margin: 0 0 14px;
+}
+
+.github-chart-card {
+  padding: 24px;
+}
+
+.github-chart-top,
+.github-stat-row,
+.github-chart-layout,
+.activity-meta-row,
+.contribution-footer {
+  display: flex;
+  gap: 16px;
+}
+
+.github-chart-top,
+.activity-meta-row,
+.contribution-footer {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.github-stat-row {
+  margin: 24px 0;
+}
+
+.github-stat {
+  flex: 1;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+}
+
+.github-stat span,
+.github-repo-item small {
+  display: block;
+  color: var(--muted);
+}
+
+.github-stat strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 26px;
+}
+
+.github-chart-layout {
+  align-items: stretch;
+}
+
+.contribution-panel,
+.github-side-panel {
+  padding: 20px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+}
+
+.contribution-panel {
+  flex: 1.35;
+}
+
+.github-side-panel {
+  width: min(100%, 320px);
+}
+
+.calendar-wrap {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+}
+
+.weekday-labels,
+.month-labels {
+  display: grid;
+  color: var(--quiet);
+  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+  font-size: 11px;
+}
+
+.weekday-labels {
+  gap: 36px;
+  padding-top: 32px;
+}
+
+.month-labels {
+  grid-template-columns: repeat(13, minmax(0, 1fr));
+  margin-bottom: 10px;
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(53, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.activity-grid span,
+.contribution-legend i {
+  width: 100%;
+  aspect-ratio: 1;
+  min-width: 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.activity-grid span[data-level="1"],
+.contribution-legend i[data-level="1"] {
+  background: #21496d;
+}
+
+.activity-grid span[data-level="2"],
+.contribution-legend i[data-level="2"] {
+  background: #2e6ea7;
+}
+
+.activity-grid span[data-level="3"],
+.contribution-legend i[data-level="3"] {
+  background: #4092da;
+}
+
+.activity-grid span[data-level="4"],
+.contribution-legend i[data-level="4"] {
+  background: #69beff;
+}
+
+.contribution-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--quiet);
+}
+
+.github-repo-list {
+  display: grid;
+  gap: 12px;
+}
+
+.github-repo-item {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.github-repo-empty {
+  margin: 0;
+  color: var(--muted);
+}
+
+.activity-meta-row {
+  margin-top: 22px;
+  flex-wrap: wrap;
+  color: var(--muted);
+}
+
+.oss-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.achievement-list article {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.achievement-no {
+  color: var(--quiet);
+  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.badge.blue {
+  background: rgba(91, 141, 255, 0.16);
+  color: var(--blue);
+}
+
+.badge.green {
+  background: rgba(82, 218, 133, 0.16);
+  color: var(--green);
+}
+
+.project-card {
+  padding: 22px;
+}
+
+.timeline-icons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.project-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.project-head strong a {
+  margin-left: 8px;
+  color: var(--accent);
+}
+
+.project-details {
+  display: grid;
+  gap: 8px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 240ms ease, opacity 240ms ease, margin-top 240ms ease;
+}
+
+.project-card.open .project-details {
+  max-height: 500px;
+  margin-top: 16px;
+  opacity: 1;
+}
+
+.project-details h4 {
+  margin: 0;
+}
+
+.project-details ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.footer-rail {
+  border-top: 1px solid var(--border);
+}
+
+.footer-rail p {
+  margin: 0;
+  color: var(--quiet);
+  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+  letter-spacing: 0.2em;
+}
+
+.command-palette {
+  width: min(100%, 420px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--panel-strong);
+  color: var(--text);
+}
+
+.command-palette::backdrop {
+  background: rgba(1, 6, 14, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.command-panel {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+}
+
+.command-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.command-panel a,
+.command-panel button {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+@media (max-width: 960px) {
+  .topbar .rail,
+  .profile-grid,
+  .github-chart-layout,
+  .achievement-list article {
+    grid-template-columns: 1fr;
+  }
+
+  .social-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .github-side-panel {
+    width: auto;
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar .rail {
+    padding: 14px 16px;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .hero-frame {
+    min-height: 360px;
+  }
+
+  .hero-copy,
+  .profile-grid,
+  .content-section,
+  .coding-section,
+  .footer-rail,
+  .social-grid {
+    padding: 20px;
+  }
+
+  .github-chart-top,
+  .github-stat-row,
+  .activity-meta-row,
+  .contribution-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .calendar-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .weekday-labels {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
