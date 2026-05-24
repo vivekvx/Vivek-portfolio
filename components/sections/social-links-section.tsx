@@ -9,7 +9,7 @@ export function SocialLinksSection({ socialLinks }: { socialLinks: PortfolioCont
             <span className={`social-mark ${link.tone ?? ""}`}>
               <img src={link.icon} alt="" aria-hidden="true" />
             </span>
-            <span>
+            <span className="social-copy">
               <strong>{link.label}</strong>
               <em>{link.handle}</em>
             </span>

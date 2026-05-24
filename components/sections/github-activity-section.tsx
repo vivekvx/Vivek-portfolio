@@ -86,37 +86,40 @@ export function GitHubActivitySection() {
     };
   }, []);
 
-  const repositories = snapshot?.repositories ?? [];
   const contributionCalendar = snapshot?.contributionCalendar;
   const contributionAvailable = contributionCalendar?.available;
+  const contributionDays = contributionAvailable
+    ? contributionCalendar.weeks.flatMap((week) => week.contributionDays)
+    : [];
+  const visibleMonths = contributionAvailable
+    ? contributionCalendar.months.slice(-3).map((month) => month.name)
+    : DEFAULT_MONTHS.slice(-3);
+  const currentYear = contributionAvailable
+    ? new Date(contributionDays[contributionDays.length - 1]?.date ?? new Date().toISOString()).getFullYear()
+    : new Date().getFullYear();
 
   return (
     <section className="github-sync full-row" id="github-sync">
       <div className="rail coding-section">
-        <div className="section-heading">
-          <p className="section-kicker">Live developer pulse</p>
-          <h2>GitHub Activity</h2>
-        </div>
+        <h2>Coding Activity</h2>
         <div className="github-chart-card">
-          <div className="github-chart-top">
-            <div>
-              <h3>
-                {contributionAvailable
-                  ? `${contributionCalendar.totalContributions.toLocaleString("en-IN")} contributions in the last year`
-                  : "Live public GitHub snapshot"}
-              </h3>
-              <p className="github-section-note">
-                Server-backed profile stats and repositories. The contribution calendar appears when this deployment has a GitHub token configured.
-              </p>
+          <div className="github-hero-row">
+            <div className="github-identity">
+              <span className="github-badge">
+                <img src="/assets/icons/github.svg" alt="" aria-hidden="true" />
+              </span>
+              <div className="github-hero-copy">
+                <h3>GitHub</h3>
+                <p>
+                  <strong>
+                    {contributionAvailable
+                      ? contributionCalendar.totalContributions.toLocaleString("en-IN")
+                      : "--"}
+                  </strong>{" "}
+                  <span>{currentYear}</span> <em>Commits</em>
+                </p>
+              </div>
             </div>
-            <a
-              className="settings-button"
-              href={snapshot?.profile.url ?? "https://github.com/vivekvx"}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Open @vivekvx <span aria-hidden="true">↗</span>
-            </a>
           </div>
 
           <div className="github-stat-row" aria-label="GitHub profile snapshot">
@@ -136,6 +139,9 @@ export function GitHubActivitySection() {
 
           <div className="github-chart-layout">
             <div className="contribution-panel">
+              <p className="github-section-note">
+                Server-backed profile stats and repositories. The contribution calendar appears when this deployment has a GitHub token configured.
+              </p>
               <div className="calendar-wrap">
                 <div className="weekday-labels" aria-hidden="true">
                   <span>Mon</span>
@@ -144,7 +150,7 @@ export function GitHubActivitySection() {
                 </div>
                 <div className="calendar-area">
                   <div className="month-labels" aria-hidden="true">
-                    {(contributionAvailable ? contributionCalendar.months.map((month) => month.name) : DEFAULT_MONTHS).map((month, index) => (
+                    {visibleMonths.map((month, index) => (
                       <span key={`${month}-${index}`}>{month}</span>
                     ))}
                   </div>
@@ -168,9 +174,9 @@ export function GitHubActivitySection() {
               </div>
 
               <div className="contribution-footer">
-                <span>
+                <span className="contribution-count-line">
                   {contributionAvailable
-                    ? "Contribution calendar synced from GitHub's last 12 months of public activity."
+                    ? `${contributionCalendar.totalContributions.toLocaleString("en-IN")} contributions in ${currentYear}`
                     : "Contribution calendar unavailable in this deployment. Open GitHub for the full yearly graph."}
                 </span>
                 <div className="contribution-legend" aria-label="Contribution intensity legend">
@@ -184,40 +190,10 @@ export function GitHubActivitySection() {
                 </div>
               </div>
             </div>
-
-            <div className="github-side-panel" aria-label="Recent GitHub repositories">
-              <h4>Recent public repositories</h4>
-              <div className="github-repo-list">
-                {repositories.length ? (
-                  repositories.map((repo) => (
-                    <a key={repo.url} className="github-repo-item" href={repo.url} target="_blank" rel="noreferrer">
-                      <strong>{repo.name}</strong>
-                      <p>{repo.description || "No public description provided."}</p>
-                      <small>
-                        {[repo.language, `${repo.stars} star${repo.stars === 1 ? "" : "s"}`, repo.pushedAt ? `Updated ${formatShortDate(repo.pushedAt)}` : null]
-                          .filter(Boolean)
-                          .join(" · ")}
-                      </small>
-                    </a>
-                  ))
-                ) : (
-                  <p className="github-repo-empty">
-                    {failed
-                      ? "Repository details are unavailable right now. Open GitHub to browse the latest work."
-                      : "Loading public repositories..."}
-                  </p>
-                )}
-              </div>
-            </div>
           </div>
 
           <div className="activity-meta-row">
-            <span className="github-mini-mark">
-              <img src="/assets/icons/github.svg" alt="" aria-hidden="true" />
-            </span>
-            <p>
-              <strong>{snapshot?.summary.topLanguage || "No dominant language yet"}</strong> appears most often across Vivek&apos;s recent public repositories.
-            </p>
+            <p><strong>{snapshot?.summary.topLanguage || "No dominant language yet"}</strong> appears most often across Vivek&apos;s recent public repositories.</p>
             <span className="oss-chip">
               <b>⌘</b>
               <em>{snapshot?.generatedAt ? `Synced ${formatShortDate(snapshot.generatedAt, { month: "short", day: "numeric" })}` : "Awaiting sync"}</em>

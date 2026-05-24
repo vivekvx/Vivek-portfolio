@@ -12,7 +12,7 @@ export function ExperienceSection({ experience }: { experience: PortfolioContent
               <div className={`company-logo ${item.tone}`}>
                 <img src={item.icon} alt="" aria-hidden="true" />
               </div>
-              <div>
+              <div className="experience-copy">
                 <h3>{item.title}</h3>
                 <p className="experience-meta">{item.company}</p>
                 <p className="experience-meta">{item.meta.join(" · ")}</p>

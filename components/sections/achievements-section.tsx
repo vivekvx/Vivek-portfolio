@@ -13,13 +13,17 @@ export function AchievementsSection({ achievements }: { achievements: PortfolioC
               <span className={`achievement-logo ${item.iconTone}`}>
                 <img src={item.icon} alt="" aria-hidden="true" />
               </span>
-              <div>
-                <h3>
-                  {item.title} <em className={`badge ${item.badgeTone}`}>{item.badge}</em>
-                </h3>
-                <p>{item.org}</p>
+              <div className="achievement-copy">
+                <div className="achievement-header">
+                  <div>
+                    <h3>
+                      {item.title} <em className={`badge ${item.badgeTone}`}>{item.badge}</em>
+                    </h3>
+                    <p>{item.org}</p>
+                  </div>
+                  <strong>{item.year}</strong>
+                </div>
               </div>
-              <strong>{item.year}</strong>
             </article>
           ))}
         </div>
