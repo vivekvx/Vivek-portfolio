@@ -802,10 +802,6 @@ main > section .rail {
   white-space: nowrap;
 }
 
-.stack .rail {
-  background-image: repeating-linear-gradient(-45deg, var(--border) 0 1px, transparent 1px 6px);
-}
-
 .ai-stack {
   display: grid;
   gap: 34px;
