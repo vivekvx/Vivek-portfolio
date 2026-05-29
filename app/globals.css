@@ -594,9 +594,7 @@ html:not([data-theme]) .social-mark img {
 .stack-category {
   padding: 22px 18px;
   border: 1px solid var(--border);
-  background:
-    repeating-linear-gradient(-45deg, color-mix(in srgb, var(--stripe-line) 75%, transparent) 0 2px, transparent 2px 8px),
-    var(--surface-tint);
+  background: var(--surface-tint);
 }
 
 .stack-category h3 {
