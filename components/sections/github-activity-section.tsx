@@ -149,25 +149,27 @@ export function GitHubActivitySection() {
                   <span>Fri</span>
                 </div>
                 <div className="calendar-area">
-                  <div className="month-labels" aria-hidden="true">
-                    {visibleMonths.map((month, index) => (
-                      <span key={`${month}-${index}`}>{month}</span>
-                    ))}
-                  </div>
                   <div className="github-graph-strip graph-generated">
-                    <div className="activity-grid" aria-label="GitHub contribution activity graph">
-                      {contributionAvailable
-                        ? contributionCalendar.weeks.flatMap((week) =>
-                            week.contributionDays.map((day) => (
-                              <span
-                                key={day.date}
-                                data-level={levelFromGitHub(day.contributionLevel)}
-                                title={`${day.contributionCount} contribution${day.contributionCount === 1 ? "" : "s"} on ${formatShortDate(day.date)}`}
-                                style={day.color ? { backgroundColor: day.color } : undefined}
-                              />
-                            )),
-                          )
-                        : EMPTY_CELLS.map((_, index) => <span key={index} data-level={0} />)}
+                    <div className="github-graph-content">
+                      <div className="month-labels" aria-hidden="true">
+                        {visibleMonths.map((month, index) => (
+                          <span key={`${month}-${index}`}>{month}</span>
+                        ))}
+                      </div>
+                      <div className="activity-grid" aria-label="GitHub contribution activity graph">
+                        {contributionAvailable
+                          ? contributionCalendar.weeks.flatMap((week) =>
+                              week.contributionDays.map((day) => (
+                                <span
+                                  key={day.date}
+                                  data-level={levelFromGitHub(day.contributionLevel)}
+                                  title={`${day.contributionCount} contribution${day.contributionCount === 1 ? "" : "s"} on ${formatShortDate(day.date)}`}
+                                  style={day.color ? { backgroundColor: day.color } : undefined}
+                                />
+                              )),
+                            )
+                          : EMPTY_CELLS.map((_, index) => <span key={index} data-level={0} />)}
+                      </div>
                     </div>
                   </div>
                 </div>
