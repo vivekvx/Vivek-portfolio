@@ -114,23 +114,44 @@ export const portfolioContent = {
   ],
   projects: [
     {
-      name: "Friday.ai",
-      href: "https://github.com/vivekvx/Friday.ai",
-      kind: "AI voice agent + MCP server",
-      summary: "Fully Responsive Intelligent Digital Assistant for You",
+      name: "Agentrail",
+      href: "https://github.com/vivekvx/Agentrail",
+      kind: "AI debugging agent · LangGraph + FastAPI + Next.js",
+      summary: "Verification-first AI agent for evidence-backed bug fixes",
       description:
-        "A Tony Stark-inspired AI assistant with a FastMCP backend and LiveKit voice agent. It listens, reasons through an LLM, calls tools in real time, and speaks back through TTS.",
-      icon: "/assets/icons/friday.svg",
+        "Agentrail automates the full debugging loop — scanning a repository, collecting grounded evidence, explaining root cause, generating a patch diff, running tests, and scoring residual risk — then pauses at a human-in-the-loop approval gate before anything touches the repo.",
+      icon: "/assets/icons/agentrail.svg",
       built: [
-        "Built a FastMCP server exposing tools, prompts, and resources over SSE.",
-        "Wired a LiveKit voice pipeline with STT, Gemini 2.5 Flash, and OpenAI TTS.",
+        "Designed a multi-stage LangGraph pipeline: Scan → Search → Evidence → Root Cause → Fix Strategy → Patch Preview → Approval Gate → Test Runner → Risk Score → PR Draft.",
+        "Built a FastAPI backend with JWT auth, SSE streaming for live run events, and PostgreSQL persistence via SQLAlchemy.",
+        "Shipped a Next.js dashboard with real-time agent run monitoring, auth guard, and token management.",
       ],
       challenge: [
-        "Coordinated separate server and voice-agent runtimes that must operate together.",
-        "Designed the architecture so new MCP tools can be added cleanly.",
+        "Replaced polling with SSE to stream live agent events without blocking the UI thread.",
+        "Implemented a LangGraph interrupt node as the approval gate so the agent suspends mid-pipeline awaiting explicit user sign-off.",
       ],
-      tags: ["Python", "FastMCP", "LiveKit", "Gemini", "OpenAI TTS", "Sarvam STT", "SSE", "uv"],
+      tags: ["Python", "LangGraph", "FastAPI", "Next.js", "PostgreSQL", "SSE", "JWT", "LLM", "Patch Diff"],
       defaultOpen: true,
+    },
+    {
+      name: "CiteMind",
+      href: "https://github.com/vivekvx/CiteMind",
+      kind: "RAG research assistant · Next.js + FastAPI",
+      summary: "Citation-first document Q&A with visible answer-quality metrics",
+      description:
+        "CiteMind lets you upload PDFs, EPUBs, Markdown, or text files and ask questions against them. It retrieves grounded chunks, synthesises cited answers, and runs evaluation scores for faithfulness, answer relevance, context relevance, and citation coverage — so every answer can be audited.",
+      icon: "/assets/icons/citemind.svg",
+      built: [
+        "Built a FastAPI retrieval backend with chunk persistence, an in-memory vector index, and optional FlashRank reranking for hard context lookups.",
+        "Wired an intent router that handles summaries, topics, study notes, flashcards, comparisons, definitions, and Q&A flows from a single query entry point.",
+        "Deployed the full stack on Vercel with Next.js rewrites proxying all API calls through the public domain.",
+      ],
+      challenge: [
+        "Filtered table-of-contents and page-marker noise from PDF chunks that polluted early retrieval results.",
+        "Tuned the evaluation pipeline to score faithfulness and citation coverage without requiring an external judge model.",
+      ],
+      tags: ["Next.js", "FastAPI", "Python", "RAG", "Vector Search", "FlashRank", "LlamaParse", "Evals", "Vercel"],
+      defaultOpen: false,
     },
     {
       name: "FlowRestore",
