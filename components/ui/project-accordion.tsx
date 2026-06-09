@@ -6,61 +6,81 @@ type ProjectAccordionProps = {
   project: {
     name: string;
     href: string;
-      kind: string;
-      summary: string;
-      description: string;
-      icon: string;
-      built: readonly string[];
-      challenge: readonly string[];
-      tags: readonly string[];
-      defaultOpen: boolean;
-    };
+    kind: string;
+    summary: string;
+    description: string;
+    icon: string;
+    built: readonly string[];
+    challenge: readonly string[];
+    tags: readonly string[];
+    defaultOpen: boolean;
+  };
+  index: number;
 };
 
-export function ProjectAccordion({ project }: ProjectAccordionProps) {
+export function ProjectAccordion({ project, index }: ProjectAccordionProps) {
   const [open, setOpen] = useState(project.defaultOpen);
 
   return (
     <article className={`project-card ${open ? "open" : ""}`}>
-      <div className="timeline-icons" aria-hidden="true">
-        <span>
-          <img src={project.icon} alt="" />
+      <button
+        type="button"
+        className="project-trigger"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className="project-no">{String(index).padStart(2, "0")}</span>
+        <span className="project-icon-cell">
+          <img src={project.icon} alt="" aria-hidden="true" />
         </span>
-        <span>⌘</span>
-      </div>
-      <button type="button" className="project-head" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-        <span>
-          <strong>
-            {project.name}{" "}
-            <a href={project.href} target="_blank" rel="noreferrer" aria-label={`${project.name} GitHub`}>
-              GH
-            </a>
-          </strong>
+        <span className="project-title-cell">
+          <strong>{project.name}</strong>
           <em>{project.kind}</em>
-          <small>{project.summary}</small>
         </span>
-        <b aria-hidden="true">⌄</b>
+        <span className="project-summary-cell">{project.summary}</span>
+        <span className="project-chevron-cell" aria-hidden="true" />
       </button>
-      <p>{project.description}</p>
-      <div className="project-details">
-        <h4>Built</h4>
-        <ul>
-          {project.built.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-        <h4>Challenging (but overcame)</h4>
-        <ul>
-          {project.challenge.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
+
+      <div className="project-body">
+        <div className="project-body-inner">
+          <p className="project-desc">{project.description}</p>
+          <div className="project-detail-cols">
+            <div className="project-detail-col">
+              <h4 className="detail-label">Built</h4>
+              <ul className="detail-list">
+                {project.built.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="project-detail-col challenge">
+              <h4 className="detail-label">Challenge</h4>
+              <ul className="detail-list">
+                {project.challenge.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="tags">
-        {project.tags.map((tag) => (
-          <span key={tag}>{tag}</span>
-        ))}
-      </div>
+
+      <footer className="project-foot">
+        <div className="tags">
+          {project.tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+        <a
+          href={project.href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${project.name} on GitHub`}
+          className="project-gh"
+        >
+          GitHub ↗
+        </a>
+      </footer>
     </article>
   );
 }

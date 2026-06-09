@@ -8,8 +8,8 @@ export function ProjectsSection({ projects }: { projects: PortfolioContent["proj
       <div className="rail content-section">
         <SectionHeading title="Projects" kicker="Things I have shipped" />
         <div className="project-timeline">
-          {projects.map((project) => (
-            <ProjectAccordion key={project.name} project={project} />
+          {projects.map((project, idx) => (
+            <ProjectAccordion key={project.name} project={project} index={idx + 1} />
           ))}
         </div>
       </div>
