@@ -14,16 +14,12 @@ export function AchievementsSection({ achievements }: { achievements: PortfolioC
                 <img src={item.icon} alt="" aria-hidden="true" />
               </span>
               <div className="achievement-copy">
-                <div className="achievement-header">
-                  <div>
-                    <h3>
-                      {item.title} <em className={`badge ${item.badgeTone}`}>{item.badge}</em>
-                    </h3>
-                    <p>{item.org}</p>
-                  </div>
-                  <strong>{item.year}</strong>
-                </div>
+                <h3>
+                  {item.title} <em className={`badge ${item.badgeTone}`}>{item.badge}</em>
+                </h3>
+                <p>{item.org}</p>
               </div>
+              <strong className="achievement-year">{item.year}</strong>
             </article>
           ))}
         </div>

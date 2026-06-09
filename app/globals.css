@@ -505,9 +505,10 @@ html:not([data-theme]) .social-mark img {
 }
 
 .achievement-list article {
-  grid-template-columns: 70px 96px minmax(0, 1fr);
-  gap: 24px;
-  padding: 28px 22px;
+  grid-template-columns: 48px 60px 1fr 72px;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 22px;
 }
 
 .experience-item:last-child,
@@ -565,14 +566,11 @@ html:not([data-theme]) .social-mark img {
 }
 
 .achievement-logo {
-  width: 96px;
-  height: 96px;
-  align-self: start;
+  width: 60px;
+  height: 60px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--panel-strong) 84%, white 16%);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--border-strong) 90%, white 10%),
-    0 10px 24px rgba(0, 0, 0, 0.14);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border-strong) 90%, white 10%);
 }
 
 .achievement-logo img {
@@ -871,21 +869,22 @@ html:not([data-theme]) .social-mark img {
 }
 
 .achievement-no {
-  color: var(--quiet);
   font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px;
   font-weight: 800;
-  font-size: 18px;
-  line-height: 1;
-  padding-top: 14px;
+  letter-spacing: 0.06em;
+  color: var(--quiet);
+  text-align: center;
 }
 
-.achievement-header > strong {
-  color: var(--muted);
+.achievement-year {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 28px;
-  line-height: 1;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--muted);
+  text-align: right;
   white-space: nowrap;
-  padding-top: 2px;
+  line-height: 1;
 }
 
 .achievement-list h3 {
@@ -893,14 +892,16 @@ html:not([data-theme]) .social-mark img {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  font-size: clamp(24px, 3vw, 40px);
+  gap: 10px;
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.1;
 }
 
 .achievement-copy p {
-  margin: 16px 0 0;
-  font-size: 16px;
-  color: var(--muted);
+  margin: 6px 0 0;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--quiet);
 }
 
 .badge {
@@ -1001,7 +1002,7 @@ html:not([data-theme]) .social-mark img {
 .project-trigger {
   width: 100%;
   display: grid;
-  grid-template-columns: 52px 52px 220px 1fr 48px;
+  grid-template-columns: 52px 220px 1fr 48px;
   align-items: stretch;
   padding: 0;
   border: none;
@@ -1315,18 +1316,18 @@ html:not([data-theme]) .social-mark img {
   }
 
   .achievement-list article {
-    grid-template-columns: 56px 80px minmax(0, 1fr);
-    gap: 18px;
+    grid-template-columns: 36px 52px 1fr 56px;
+    gap: 14px;
+    padding: 16px 16px;
   }
 
   .achievement-logo {
-    width: 80px;
-    height: 80px;
+    width: 52px;
+    height: 52px;
   }
 
-  .achievement-header {
-    flex-direction: column;
-    gap: 12px;
+  .achievement-year {
+    font-size: 16px;
   }
 
   .brand {
@@ -1373,7 +1374,7 @@ html:not([data-theme]) .social-mark img {
   }
 
   .project-trigger {
-    grid-template-columns: 40px 44px 1fr 40px;
+    grid-template-columns: 44px 1fr 40px;
   }
 
   .project-summary-cell {
@@ -1382,11 +1383,6 @@ html:not([data-theme]) .social-mark img {
 
   .project-detail-cols {
     grid-template-columns: 1fr;
-  }
-
-  .project-detail-col:first-child {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
   }
 }
 

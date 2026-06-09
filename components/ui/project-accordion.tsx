@@ -18,7 +18,7 @@ type ProjectAccordionProps = {
   index: number;
 };
 
-export function ProjectAccordion({ project, index }: ProjectAccordionProps) {
+export function ProjectAccordion({ project, index: _index }: ProjectAccordionProps) {
   const [open, setOpen] = useState(project.defaultOpen);
 
   return (
@@ -29,7 +29,6 @@ export function ProjectAccordion({ project, index }: ProjectAccordionProps) {
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        <span className="project-no">{String(index).padStart(2, "0")}</span>
         <span className="project-icon-cell">
           <img src={project.icon} alt="" aria-hidden="true" />
         </span>
@@ -49,14 +48,6 @@ export function ProjectAccordion({ project, index }: ProjectAccordionProps) {
               <h4 className="detail-label">Built</h4>
               <ul className="detail-list">
                 {project.built.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="project-detail-col challenge">
-              <h4 className="detail-label">Challenge</h4>
-              <ul className="detail-list">
-                {project.challenge.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
