@@ -926,6 +926,28 @@ html:not([data-theme]) .social-mark img {
 
 /* ── Projects ─────────────────────────────────────────── */
 
+@keyframes project-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes detail-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .project-timeline {
   display: flex;
   flex-direction: column;
@@ -935,10 +957,17 @@ html:not([data-theme]) .social-mark img {
 }
 
 .project-card {
+  position: relative;
   border-bottom: 1px solid var(--border);
   background: transparent;
   transition: background 200ms ease;
+  animation: project-card-in 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+.project-card:nth-child(1) { animation-delay: 80ms; }
+.project-card:nth-child(2) { animation-delay: 160ms; }
+.project-card:nth-child(3) { animation-delay: 240ms; }
+.project-card:nth-child(4) { animation-delay: 320ms; }
 
 .project-card:last-child {
   border-bottom: none;
@@ -946,6 +975,25 @@ html:not([data-theme]) .social-mark img {
 
 .project-card.open {
   background: var(--surface-tint);
+}
+
+/* Left accent hairline — xAI-style hairline elevation signal */
+.project-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.project-card.open::before {
+  transform: scaleY(1);
 }
 
 /* Trigger row */
@@ -963,6 +1011,7 @@ html:not([data-theme]) .social-mark img {
   cursor: pointer;
   text-align: left;
   min-height: 66px;
+  transition: background 180ms ease;
 }
 
 .project-card.open .project-trigger {
@@ -980,6 +1029,11 @@ html:not([data-theme]) .social-mark img {
   font-weight: 800;
   letter-spacing: 0.06em;
   color: var(--quiet);
+  transition: color 220ms ease;
+}
+
+.project-card.open .project-no {
+  color: var(--accent);
 }
 
 .project-icon-cell {
@@ -995,6 +1049,11 @@ html:not([data-theme]) .social-mark img {
   width: 28px;
   height: 28px;
   border-radius: 8px;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-trigger:hover .project-icon-cell img {
+  transform: scale(1.08);
 }
 
 .project-title-cell {
@@ -1149,16 +1208,33 @@ html:not([data-theme]) .social-mark img {
   display: inline-flex;
   align-items: center;
   min-height: 28px;
-  padding: 0 12px;
+  padding: 0 14px;
   border: 1px solid var(--border-strong);
-  border-radius: 7px;
+  border-radius: 999px;
   background: var(--surface-tint-strong);
   color: var(--quiet);
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-size: 11px;
   font-weight: 700;
-  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+  letter-spacing: 0.04em;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
+
+.project-card.open .detail-label {
+  animation: detail-fade-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.project-card.open .project-detail-col:last-child .detail-label {
+  animation-delay: 40ms;
+}
+
+.project-card.open .detail-list li {
+  animation: detail-fade-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.project-card.open .detail-list li:nth-child(1) { animation-delay: 60ms; }
+.project-card.open .detail-list li:nth-child(2) { animation-delay: 100ms; }
+.project-card.open .detail-list li:nth-child(3) { animation-delay: 140ms; }
 
 .footer {
   min-height: 230px;
