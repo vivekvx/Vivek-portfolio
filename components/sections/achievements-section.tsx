@@ -9,15 +9,15 @@ export function AchievementsSection({ achievements }: { achievements: PortfolioC
         <div className="achievement-list">
           {achievements.map((item) => (
             <article key={item.title}>
-              <span className="achievement-no">{item.number}</span>
               <span className={`achievement-logo ${item.iconTone}`}>
                 <img src={item.icon} alt="" aria-hidden="true" />
               </span>
               <div className="achievement-copy">
-                <h3>
-                  {item.title} <em className={`badge ${item.badgeTone}`}>{item.badge}</em>
-                </h3>
-                <p>{item.org}</p>
+                <h3>{item.title}</h3>
+                <div className="achievement-meta">
+                  <em className={`badge ${item.badgeTone}`}>{item.badge}</em>
+                  <span className="achievement-org">{item.org}</span>
+                </div>
               </div>
               <strong className="achievement-year">{item.year}</strong>
             </article>
