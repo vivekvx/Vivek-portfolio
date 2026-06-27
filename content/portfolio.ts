@@ -114,6 +114,26 @@ export const portfolioContent = {
   ],
   projects: [
     {
+      name: "Juris",
+      href: "https://github.com/vivekvx/juris",
+      kind: "AI legal assistant · Next.js + FastAPI",
+      summary: "AI-powered legal research assistant with an immutable audit trail",
+      description:
+        "Juris is a legal research assistant built for professionals, featuring RAG over user-uploaded documents with inline source citations, an immutable AI decision ledger, and a policy engine evaluated in the chat pipeline.",
+      icon: "/assets/icons/juris.svg",
+      built: [
+        "Built a FastAPI backend using Python 3.12, Gemini 2.5 Flash, and Google text-embedding-004.",
+        "Created a frontend in Next.js 16 with Tailwind CSS, Zustand, and React 19.",
+        "Integrated Firebase Auth/Firestore and Google Cloud Speech-to-Text / Text-to-Speech."
+      ],
+      challenge: [
+        "Implemented an append-only decision ledger with SHA-256 hash chaining to make retrospective alteration detectable.",
+        "Wove a policy engine into the RAG/SSE flow as an evaluation point."
+      ],
+      tags: ["Next.js", "FastAPI", "Python", "Gemini", "RAG", "Firebase", "Docker"],
+      defaultOpen: true,
+    },
+    {
       name: "Agentrail",
       href: "https://github.com/vivekvx/Agentrail",
       kind: "AI debugging agent · LangGraph + FastAPI + Next.js",
@@ -131,7 +151,7 @@ export const portfolioContent = {
         "Implemented a LangGraph interrupt node as the approval gate so the agent suspends mid-pipeline awaiting explicit user sign-off.",
       ],
       tags: ["Python", "LangGraph", "FastAPI", "Next.js", "PostgreSQL", "SSE", "JWT", "LLM", "Patch Diff"],
-      defaultOpen: true,
+      defaultOpen: false,
     },
     {
       name: "CiteMind",
