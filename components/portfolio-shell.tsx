@@ -37,9 +37,9 @@ export function PortfolioShell() {
             </nav>
             <div className="toolbar">
               <CommandPalette links={portfolioContent.quickActions} copyActions={portfolioContent.copyActions} />
-              <a className="pill-button" href={portfolioContent.profile.supportUrl} target="_blank" rel="noreferrer">
-                <span aria-hidden="true">☕</span>
-                <span>buy me a coffee</span>
+              <a className="pill-button" href={portfolioContent.profile.mailUrl}>
+                <span aria-hidden="true">✉️</span>
+                <span>mail</span>
               </a>
               <a
                 className="icon-button"

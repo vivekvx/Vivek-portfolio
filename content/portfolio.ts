@@ -7,7 +7,7 @@ export const portfolioContent = {
     headline: "Product Mindset",
     summary:
       "I turn AI systems, workflow tools, and product ideas into interfaces that feel sharp, fast, and useful in the real world.",
-    supportUrl: "https://www.buymeacoffee.com/vivekvx",
+    mailUrl: "mailto:vivek18q@gmail.com",
     githubUrl: "https://github.com/vivekvx",
     cityImage: "/assets/city.jpg",
     portraitImage: "/assets/profile.jpeg",
