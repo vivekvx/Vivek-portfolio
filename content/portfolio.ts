@@ -124,7 +124,8 @@ export const portfolioContent = {
       built: [
         "Built a decoupled architecture with a Next.js 16 frontend and a modular FastAPI backend.",
         "Designed a scalable document pipeline for PDF extraction, chunking, and RAG-based retrieval.",
-        "Implemented a storage provider abstraction supporting local filesystem for dev and Firebase Storage for production."
+        "Implemented a storage provider abstraction supporting local filesystem for dev and Firebase Storage for production.",
+        "Integrated Google Cloud Speech-to-Text and Text-to-Speech for seamless voice conversations."
       ],
       challenge: [
         "Integrated Firebase Authentication securely across the Next.js frontend and FastAPI backend via session cookies.",
