@@ -116,21 +116,21 @@ export const portfolioContent = {
     {
       name: "Juris",
       href: "https://github.com/vivekvx/juris",
-      kind: "AI legal assistant · Next.js + FastAPI",
-      summary: "AI-powered legal research assistant with an immutable audit trail",
+      kind: "Trust-first AI legal workspace · Next.js + FastAPI",
+      summary: "Explainable AI workspace for legal document understanding and research",
       description:
-        "Juris is a legal research assistant built for professionals, featuring RAG over user-uploaded documents with inline source citations, an immutable AI decision ledger, and a policy engine evaluated in the chat pipeline.",
+        "A production-ready legal AI workspace designed for trust and explainability. It enables users to upload complex legal documents, ask follow-up questions, and receive grounded answers with verifiable citations.",
       icon: "/assets/icons/juris.svg",
       built: [
-        "Built a FastAPI backend using Python 3.12, Gemini 2.5 Flash, and Google text-embedding-004.",
-        "Created a frontend in Next.js 16 with Tailwind CSS, Zustand, and React 19.",
-        "Integrated Firebase Auth/Firestore and Google Cloud Speech-to-Text / Text-to-Speech."
+        "Built a decoupled architecture with a Next.js 16 frontend and a modular FastAPI backend.",
+        "Designed a scalable document pipeline for PDF extraction, chunking, and RAG-based retrieval.",
+        "Implemented a storage provider abstraction supporting local filesystem for dev and Firebase Storage for production."
       ],
       challenge: [
-        "Implemented an append-only decision ledger with SHA-256 hash chaining to make retrospective alteration detectable.",
-        "Wove a policy engine into the RAG/SSE flow as an evaluation point."
+        "Integrated Firebase Authentication securely across the Next.js frontend and FastAPI backend via session cookies.",
+        "Built an explainable RAG pipeline that prioritizes verified citations and trust over raw intelligence."
       ],
-      tags: ["Next.js", "FastAPI", "Python", "Gemini", "RAG", "Firebase", "Docker"],
+      tags: ["Next.js", "FastAPI", "Python", "RAG", "Firebase", "TypeScript", "Architecture"],
       defaultOpen: true,
     },
     {
