@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-label="East India Blockchain Hackathon" fill="none" stroke="#050505" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 20V9h4V5h4v4h1"/>
+  <path d="M4 9h4"/>
+  <rect x="12" y="12" width="8" height="8"/>
+  <path d="M14 12v8M16 12v8M18 12v8"/>
+  <circle cx="5" cy="9" r="1"/>
+  <circle cx="9" cy="9" r="1"/>
+  <circle cx="9" cy="5" r="1"/>
+  <circle cx="13" cy="9" r="1"/>
+</svg>

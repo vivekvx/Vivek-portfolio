@@ -9,7 +9,7 @@ export const portfolioContent = {
       "I turn AI systems, workflow tools, and product ideas into interfaces that feel sharp, fast, and useful in the real world.",
     mailUrl: "https://mail.google.com/mail/?view=cm&fs=1&to=vivek18q@gmail.com",
     githubUrl: "https://github.com/vivekvx",
-    cityImage: "/assets/city.jpg",
+    cityImage: "/assets/london.jpg",
     portraitImage: "/assets/profile.jpeg",
     voiceIntro:
       "Hey, I am Vivek Sahu. I build AI agents, developer tooling, and reliable full stack systems.",
@@ -103,6 +103,16 @@ export const portfolioContent = {
     },
     {
       number: "02",
+      title: "East India Blockchain Hackathon",
+      badge: "Finalist",
+      badgeTone: "blue",
+      org: "IIT Kharagpur",
+      year: "2025",
+      icon: "/assets/icons/eastindia-blockchain.svg",
+      iconTone: "eastindia",
+    },
+    {
+      number: "03",
       title: "SBI Mutual Fund Hackathon",
       badge: "Win",
       badgeTone: "green",
