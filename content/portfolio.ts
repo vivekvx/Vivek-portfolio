@@ -124,6 +124,27 @@ export const portfolioContent = {
   ],
   projects: [
     {
+      name: "MandateCheck",
+      href: "https://github.com/vivekvx/MandateCheck",
+      kind: "Deterministic payment firewall for AI agents · FastAPI + Next.js",
+      summary: "Rule-based guardrail that verifies AI agent payment mandates before execution",
+      description:
+        "A deterministic payment firewall built to stop AI agents from making unauthorized or out-of-policy payments. Every transaction is checked against explicit mandate rules with no LLM in the decision path, so approvals and blocks stay fully auditable and reproducible.",
+      icon: "/assets/icons/mandatecheck.svg",
+      built: [
+        "Built a fully deterministic rules engine in FastAPI + PostgreSQL that verifies every agent payment against explicit mandate policies — no LLM in the decision path.",
+        "Shipped a Next.js + Tailwind frontend with a real-time WebSocket feed and a kill switch for instantly halting agent transactions.",
+        "Built a LiteLLM/Groq adversarial agent harness to continuously red-team the firewall with attempted policy-violating payments.",
+        "Containerized the full stack with Docker Compose and deployed the backend on Render and the frontend on Cloudflare Pages with a live verified demo loop.",
+      ],
+      challenge: [
+        "Kept the payment decision path strictly deterministic, so the same mandate and transaction always produce the same allow/block outcome, even under adversarial pressure.",
+        "Designed a real-time WebSocket feed and kill switch that stay responsive under Render cold starts and rate limits during live demos.",
+      ],
+      tags: ["FastAPI", "PostgreSQL", "Next.js", "Tailwind", "WebSocket", "LiteLLM", "Groq", "Docker", "Agent Payments"],
+      defaultOpen: true,
+    },
+    {
       name: "Juris",
       href: "https://github.com/vivekvx/juris",
       kind: "Trust-first AI legal workspace · Next.js + FastAPI",
@@ -142,7 +163,7 @@ export const portfolioContent = {
         "Built an explainable RAG pipeline that prioritizes verified citations and trust over raw intelligence."
       ],
       tags: ["Next.js", "FastAPI", "Python", "RAG", "Firebase", "TypeScript", "Architecture"],
-      defaultOpen: true,
+      defaultOpen: false,
     },
     {
       name: "Agentrail",
