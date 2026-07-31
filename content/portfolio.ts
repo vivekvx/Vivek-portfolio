@@ -124,6 +124,27 @@ export const portfolioContent = {
   ],
   projects: [
     {
+      name: "vaultd",
+      href: "https://github.com/vivekvx/vaultd",
+      kind: "Local credential injector for AI coding agents · Rust",
+      summary: "ssh/sshd-style daemon that injects secrets into .env without ever putting them in an agent's context window",
+      description:
+        "vaultd stores API keys and credentials once, locally, encrypted at rest, and lets any AI coding agent on the machine (Claude Code, Cursor, Antigravity, Codex CLI) inject them straight into a project's .env file — the plaintext value goes vault to disk, never vault to a model's conversation context.",
+      icon: "/assets/icons/vaultd.svg",
+      built: [
+        "Built a three-binary architecture modeled on ssh/sshd: vaultd (background daemon holding the unlocked session key and SQLite over a Unix domain socket), vault (CLI client), and vault-mcp (MCP server client) — with vault-mcp/vault never touching SQLite or key material directly.",
+        "Encrypted every credential individually with AES-256-GCM (field-level, not one blob for the whole vault) in a SQLite WAL-mode store tuned for sub-100ms writes.",
+        "Implemented event-driven locking that re-locks and zeroizes the session key on screen-lock or sleep, with a 12-hour idle timeout as backstop only.",
+        "Shipped vault mcp install to auto-configure four MCP-compatible tools, using toml_edit for Codex's TOML config so a user's existing comments and settings survive untouched — atomic, backed up, and idempotent.",
+      ],
+      challenge: [
+        "Found and fixed a real passphrase-bypass bug: an empty vault has nothing to decrypt to prove a passphrase wrong, so any passphrase was silently accepted until a canary/known-plaintext check was added.",
+        "Verified concurrency safety with 20+ real separate OS processes hammering one daemon at once, and recovery correctness with real SIGKILLs mid-write followed by restart — zero corruption, zero partial state.",
+      ],
+      tags: ["Rust", "SQLite", "AES-256-GCM", "MCP", "CLI", "Security", "Daemon", "Codex", "Claude Code"],
+      defaultOpen: true,
+    },
+    {
       name: "MandateCheck",
       href: "https://github.com/vivekvx/MandateCheck",
       kind: "Deterministic payment firewall for AI agents · FastAPI + Next.js",
