@@ -163,7 +163,7 @@ export const portfolioContent = {
         "Designed a real-time WebSocket feed and kill switch that stay responsive under Render cold starts and rate limits during live demos.",
       ],
       tags: ["FastAPI", "PostgreSQL", "Next.js", "Tailwind", "WebSocket", "LiteLLM", "Groq", "Docker", "Agent Payments"],
-      defaultOpen: true,
+      defaultOpen: false,
     },
     {
       name: "Juris",
